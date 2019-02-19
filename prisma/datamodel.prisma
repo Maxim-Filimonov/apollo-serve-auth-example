@@ -2,4 +2,9 @@ type Book {
   id: ID! @unique
   title: String!
   author: String!
+  user: User
+}
+type User {
+  id: ID! @unique
+  username: String!
 }

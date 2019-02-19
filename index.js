@@ -24,12 +24,18 @@ const typeDefs = gql`
   type Book {
     title: String
     author: String
+    user: User
+  }
+
+  type User {
+    username: String
   }
 
   # The "Query" type is the root of all GraphQL queries.
   # (A "Mutation" type will be covered later on.)
   type Query {
     books: [Book]
+    User: User
   }
 `;
 
@@ -37,14 +43,44 @@ const typeDefs = gql`
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
   Query: {
-    books: () => prisma.books(),
+    books: (parent, args, context) => {
+      return prisma.books({
+        where: { user: { username: context.user.username } },
+      });
+    },
+    User: (parent, args, context) => {
+      console.log("PARENT");
+      return prisma.users();
+    },
   },
 };
 
+// const users = [
+//   {
+//     username: 'login',
+//     password: 'secret'
+//   }
+// ]
+// const getUser = (token) =>
 // In the most basic sense, the ApolloServer can be started
 // by passing type definitions (typeDefs) and the resolvers
 // responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => {
+    // get the user token from the headers
+    const token = req.headers.authorization || "";
+
+    // try to retrieve a user with the token
+    const user = {
+      username: "reify",
+    };
+
+    // add the user to the context
+    return { user };
+  },
+});
 
 // This `listen` method launches a web-server.  Existing apps
 // can utilize middleware options, which we'll discuss later.
