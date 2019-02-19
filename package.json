@@ -1,0 +1,17 @@
+{
+  "name": "apollo-server-auth",
+  "version": "1.0.0",
+  "description": "Following this https://www.apollographql.com/docs/apollo-server/getting-started.html",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.4.2",
+    "graphql": "^14.1.1",
+    "prisma-client-lib": "^1.26.6"
+  }
+}

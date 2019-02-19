@@ -1,0 +1,5 @@
+type Book {
+  id: ID! @unique
+  title: String!
+  author: String!
+}
