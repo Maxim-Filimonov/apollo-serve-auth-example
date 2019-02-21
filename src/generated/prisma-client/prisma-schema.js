@@ -27,7 +27,17 @@ type BookConnection {
 input BookCreateInput {
   title: String!
   author: String!
-  user: UserCreateOneInput
+  user: UserCreateOneWithoutBooksInput
+}
+
+input BookCreateManyWithoutUserInput {
+  create: [BookCreateWithoutUserInput!]
+  connect: [BookWhereUniqueInput!]
+}
+
+input BookCreateWithoutUserInput {
+  title: String!
+  author: String!
 }
 
 type BookEdge {
@@ -54,6 +64,54 @@ type BookPreviousValues {
   author: String!
 }
 
+input BookScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  author: String
+  author_not: String
+  author_in: [String!]
+  author_not_in: [String!]
+  author_lt: String
+  author_lte: String
+  author_gt: String
+  author_gte: String
+  author_contains: String
+  author_not_contains: String
+  author_starts_with: String
+  author_not_starts_with: String
+  author_ends_with: String
+  author_not_ends_with: String
+  AND: [BookScalarWhereInput!]
+  OR: [BookScalarWhereInput!]
+  NOT: [BookScalarWhereInput!]
+}
+
 type BookSubscriptionPayload {
   mutation: MutationType!
   node: Book
@@ -75,12 +133,50 @@ input BookSubscriptionWhereInput {
 input BookUpdateInput {
   title: String
   author: String
-  user: UserUpdateOneInput
+  user: UserUpdateOneWithoutBooksInput
+}
+
+input BookUpdateManyDataInput {
+  title: String
+  author: String
 }
 
 input BookUpdateManyMutationInput {
   title: String
   author: String
+}
+
+input BookUpdateManyWithoutUserInput {
+  create: [BookCreateWithoutUserInput!]
+  delete: [BookWhereUniqueInput!]
+  connect: [BookWhereUniqueInput!]
+  set: [BookWhereUniqueInput!]
+  disconnect: [BookWhereUniqueInput!]
+  update: [BookUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [BookUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [BookScalarWhereInput!]
+  updateMany: [BookUpdateManyWithWhereNestedInput!]
+}
+
+input BookUpdateManyWithWhereNestedInput {
+  where: BookScalarWhereInput!
+  data: BookUpdateManyDataInput!
+}
+
+input BookUpdateWithoutUserDataInput {
+  title: String
+  author: String
+}
+
+input BookUpdateWithWhereUniqueWithoutUserInput {
+  where: BookWhereUniqueInput!
+  data: BookUpdateWithoutUserDataInput!
+}
+
+input BookUpsertWithWhereUniqueWithoutUserInput {
+  where: BookWhereUniqueInput!
+  update: BookUpdateWithoutUserDataInput!
+  create: BookCreateWithoutUserInput!
 }
 
 input BookWhereInput {
@@ -188,6 +284,7 @@ type Subscription {
 type User {
   id: ID!
   username: String!
+  books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
 }
 
 type UserConnection {
@@ -198,11 +295,16 @@ type UserConnection {
 
 input UserCreateInput {
   username: String!
+  books: BookCreateManyWithoutUserInput
 }
 
-input UserCreateOneInput {
-  create: UserCreateInput
+input UserCreateOneWithoutBooksInput {
+  create: UserCreateWithoutBooksInput
   connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutBooksInput {
+  username: String!
 }
 
 type UserEdge {
@@ -244,30 +346,31 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
-input UserUpdateDataInput {
-  username: String
-}
-
 input UserUpdateInput {
   username: String
+  books: BookUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
   username: String
 }
 
-input UserUpdateOneInput {
-  create: UserCreateInput
-  update: UserUpdateDataInput
-  upsert: UserUpsertNestedInput
+input UserUpdateOneWithoutBooksInput {
+  create: UserCreateWithoutBooksInput
+  update: UserUpdateWithoutBooksDataInput
+  upsert: UserUpsertWithoutBooksInput
   delete: Boolean
   disconnect: Boolean
   connect: UserWhereUniqueInput
 }
 
-input UserUpsertNestedInput {
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+input UserUpdateWithoutBooksDataInput {
+  username: String
+}
+
+input UserUpsertWithoutBooksInput {
+  update: UserUpdateWithoutBooksDataInput!
+  create: UserCreateWithoutBooksInput!
 }
 
 input UserWhereInput {
@@ -299,6 +402,9 @@ input UserWhereInput {
   username_not_starts_with: String
   username_ends_with: String
   username_not_ends_with: String
+  books_every: BookWhereInput
+  books_some: BookWhereInput
+  books_none: BookWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
@@ -306,6 +412,7 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   id: ID
+  username: String
 }
 `
       }

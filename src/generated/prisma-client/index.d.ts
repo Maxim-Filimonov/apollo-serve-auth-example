@@ -244,6 +244,9 @@ export interface UserWhereInput {
   username_not_starts_with?: String;
   username_ends_with?: String;
   username_not_ends_with?: String;
+  books_every?: BookWhereInput;
+  books_some?: BookWhereInput;
+  books_none?: BookWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -251,45 +254,46 @@ export interface UserWhereInput {
 
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
+  username?: String;
 }>;
 
 export interface BookCreateInput {
   title: String;
   author: String;
-  user?: UserCreateOneInput;
+  user?: UserCreateOneWithoutBooksInput;
 }
 
-export interface UserCreateOneInput {
-  create?: UserCreateInput;
+export interface UserCreateOneWithoutBooksInput {
+  create?: UserCreateWithoutBooksInput;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserCreateInput {
+export interface UserCreateWithoutBooksInput {
   username: String;
 }
 
 export interface BookUpdateInput {
   title?: String;
   author?: String;
-  user?: UserUpdateOneInput;
+  user?: UserUpdateOneWithoutBooksInput;
 }
 
-export interface UserUpdateOneInput {
-  create?: UserCreateInput;
-  update?: UserUpdateDataInput;
-  upsert?: UserUpsertNestedInput;
+export interface UserUpdateOneWithoutBooksInput {
+  create?: UserCreateWithoutBooksInput;
+  update?: UserUpdateWithoutBooksDataInput;
+  upsert?: UserUpsertWithoutBooksInput;
   delete?: Boolean;
   disconnect?: Boolean;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserUpdateDataInput {
+export interface UserUpdateWithoutBooksDataInput {
   username?: String;
 }
 
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
+export interface UserUpsertWithoutBooksInput {
+  update: UserUpdateWithoutBooksDataInput;
+  create: UserCreateWithoutBooksInput;
 }
 
 export interface BookUpdateManyMutationInput {
@@ -297,8 +301,116 @@ export interface BookUpdateManyMutationInput {
   author?: String;
 }
 
+export interface UserCreateInput {
+  username: String;
+  books?: BookCreateManyWithoutUserInput;
+}
+
+export interface BookCreateManyWithoutUserInput {
+  create?: BookCreateWithoutUserInput[] | BookCreateWithoutUserInput;
+  connect?: BookWhereUniqueInput[] | BookWhereUniqueInput;
+}
+
+export interface BookCreateWithoutUserInput {
+  title: String;
+  author: String;
+}
+
 export interface UserUpdateInput {
   username?: String;
+  books?: BookUpdateManyWithoutUserInput;
+}
+
+export interface BookUpdateManyWithoutUserInput {
+  create?: BookCreateWithoutUserInput[] | BookCreateWithoutUserInput;
+  delete?: BookWhereUniqueInput[] | BookWhereUniqueInput;
+  connect?: BookWhereUniqueInput[] | BookWhereUniqueInput;
+  set?: BookWhereUniqueInput[] | BookWhereUniqueInput;
+  disconnect?: BookWhereUniqueInput[] | BookWhereUniqueInput;
+  update?:
+    | BookUpdateWithWhereUniqueWithoutUserInput[]
+    | BookUpdateWithWhereUniqueWithoutUserInput;
+  upsert?:
+    | BookUpsertWithWhereUniqueWithoutUserInput[]
+    | BookUpsertWithWhereUniqueWithoutUserInput;
+  deleteMany?: BookScalarWhereInput[] | BookScalarWhereInput;
+  updateMany?:
+    | BookUpdateManyWithWhereNestedInput[]
+    | BookUpdateManyWithWhereNestedInput;
+}
+
+export interface BookUpdateWithWhereUniqueWithoutUserInput {
+  where: BookWhereUniqueInput;
+  data: BookUpdateWithoutUserDataInput;
+}
+
+export interface BookUpdateWithoutUserDataInput {
+  title?: String;
+  author?: String;
+}
+
+export interface BookUpsertWithWhereUniqueWithoutUserInput {
+  where: BookWhereUniqueInput;
+  update: BookUpdateWithoutUserDataInput;
+  create: BookCreateWithoutUserInput;
+}
+
+export interface BookScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  title?: String;
+  title_not?: String;
+  title_in?: String[] | String;
+  title_not_in?: String[] | String;
+  title_lt?: String;
+  title_lte?: String;
+  title_gt?: String;
+  title_gte?: String;
+  title_contains?: String;
+  title_not_contains?: String;
+  title_starts_with?: String;
+  title_not_starts_with?: String;
+  title_ends_with?: String;
+  title_not_ends_with?: String;
+  author?: String;
+  author_not?: String;
+  author_in?: String[] | String;
+  author_not_in?: String[] | String;
+  author_lt?: String;
+  author_lte?: String;
+  author_gt?: String;
+  author_gte?: String;
+  author_contains?: String;
+  author_not_contains?: String;
+  author_starts_with?: String;
+  author_not_starts_with?: String;
+  author_ends_with?: String;
+  author_not_ends_with?: String;
+  AND?: BookScalarWhereInput[] | BookScalarWhereInput;
+  OR?: BookScalarWhereInput[] | BookScalarWhereInput;
+  NOT?: BookScalarWhereInput[] | BookScalarWhereInput;
+}
+
+export interface BookUpdateManyWithWhereNestedInput {
+  where: BookScalarWhereInput;
+  data: BookUpdateManyDataInput;
+}
+
+export interface BookUpdateManyDataInput {
+  title?: String;
+  author?: String;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -361,6 +473,15 @@ export interface User {
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
   username: () => Promise<String>;
+  books: <T = FragmentableArray<Book>>(args?: {
+    where?: BookWhereInput;
+    orderBy?: BookOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface UserSubscription
@@ -368,6 +489,15 @@ export interface UserSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   username: () => Promise<AsyncIterator<String>>;
+  books: <T = Promise<AsyncIterator<BookSubscription>>>(args?: {
+    where?: BookWhereInput;
+    orderBy?: BookOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface BookConnection {

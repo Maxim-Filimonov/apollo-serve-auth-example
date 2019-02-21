@@ -6,5 +6,6 @@ type Book {
 }
 type User {
   id: ID! @unique
-  username: String!
+  username: String! @unique
+  books: [Book!]!
 }

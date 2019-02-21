@@ -22,6 +22,7 @@ const typeDefs = gql`
 
   # This "Book" type can be used in other type declarations.
   type Book {
+    id: ID
     title: String
     author: String
     user: User
@@ -29,6 +30,7 @@ const typeDefs = gql`
 
   type User {
     username: String
+    books: [Book]
   }
 
   # The "Query" type is the root of all GraphQL queries.
@@ -43,14 +45,19 @@ const typeDefs = gql`
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
   Query: {
-    books: (parent, args, context) => {
-      return prisma.books({
-        where: { user: { username: context.user.username } },
-      });
+    books: async (parent, args, context) => {
+      // { books: {* }
+      return await prisma.user({ username: context.user.username }).books();
     },
-    User: (parent, args, context) => {
-      console.log("PARENT");
-      return prisma.users();
+  },
+  Book: {
+    user: async (parent, args, context) => {
+      return await prisma.book({ id: parent.id }).user();
+    },
+  },
+  User: {
+    books: async (parent, args, context) => {
+      return await prisma.user({ id: parent.id }).books();
     },
   },
 };
